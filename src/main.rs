@@ -19,7 +19,14 @@ fn main() {
 	println!("Searching {} iterations ({}x231 random picks)", TOTAL_COUNT,TOTAL_COUNT);
     let now = Instant::now();
 
-	let maximum = (0..THREAD_COUNT).into_par_iter().map(|_|{
+	let maximum = perform_calculations();
+
+	println!("Found the largest number {} after {:.3?}",maximum, now.elapsed());
+}
+
+#[inline]
+fn perform_calculations()->u32{
+	(0..THREAD_COUNT).into_par_iter().map(|_|{
 
 		//	The random number generator is the most important part of this program, and choosing the right one is important for performance.
 
@@ -36,9 +43,7 @@ fn main() {
 					let res = do_random_block(&mut rng);
 					res
 				}).max().unwrap()
-			}).max().unwrap();
-
-	println!("Found the largest number {} after {:.3?}",maximum, now.elapsed());
+			}).max().unwrap()
 }
 
 fn do_random_block<R: RandNumGen>(rng: &mut R) -> u32{
